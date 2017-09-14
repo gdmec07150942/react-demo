@@ -2,55 +2,58 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import BodyChild from './bodychild';
 
+import ReactMixin from 'react-mixin';
+import MixinLog from './mixins';
+
 const defaultProps = {
-    username: '这是默认的用户名',
-}
+	username: '这是一个默认的用户名'
+};
+
 export default class BodyIndex extends React.Component {
-    componentWillMount() {
-        //这是页面正在加载中的方法，可以在这里写逻辑判断
-        console.log('BodyIndex -  componentWillMount');
-    }
+	constructor() {
+		super(); //调用基类的所有的初始化方法
+		this.state = {
+			username: "Parry",
+			age: 20
+		}; //初始化赋值
+	};
+	changeUserInfo(age) {
+		this.setState({age: age});
+		//第一种方式
+		// var mySubmitBotton  = document.getElementById('submitButton');
+		// console.log(mySubmitBotton);
+		// ReactDOM.findDOMNode(mySubmitBotton).style.color = 'red';
 
-    componentDidMount() {
-        //这是页面加载完成之后的方法，也可以在这里写逻辑
-        console.log('BodyIndex -  componentDidMount');
-    }
+		//第二种方式
+		console.log(this.refs.submitButton);
+		this.refs.submitButton.style.color = 'red';
 
-    constructor() {
-        super();//调用基类的初始化方法
-        this.state = {username: 'taotao', age: 20};  //初始化赋值
-    }
+		MixinLog.log();
 
-    UserInfo() {
-        this.setState({age: 50});
-    }
-
-    handleChildValueChange(event) {
-        this.setState({age: event.target.value});
-    }
-
-    render() {
-        setTimeout(() => {
-            this.setState({username: '你们好'});
-        }, 4000);
-
-        var username = '';
-        var boolInput = false;
-        var html = 'www&nbsp;html';
-        return (
-            <div>
-                <h1>这里是内容</h1>
-                <p>{username == '' ? '用户还没有登录' : '用户名:' + username}</p>
-                <p>{this.state.username} {this.props.userid} {this.props.username}</p>
-                <input type="button" value='默认按钮' disabled={boolInput}/>
-                <input type="button" value="提交" onClick={this.UserInfo.bind(this)}/>
-                <p>{this.state.age}</p>
-                <BodyChild handleChildValueChange={this.handleChildValueChange.bind(this)}/>
-                <p>{html}</p>{/*如何去解析html语句，可以用unicode转码去解析*/}
-                <p dangerouslySetInnerHTML={{__html: html}}></p> {/*并不建议这么做解析HTML，有攻击的漏洞问题，xxs攻击*/}
-            </div>
-        )
-    }
+	};
+	handleChildValueChange(event) {
+		this.setState({age: event.target.value});
+	};
+	render() {
+		// setTimeout(()=>{
+		//   //更改 state 的时候
+		//   this.setState({username: "IMOOC",age : 30});
+		// },4000);
+		return (
+			<div>
+				<h2>页面的主体内容</h2>
+				<p>接收到的父页面的属性：userid: {this.props.userid}
+					username: {this.props.username}</p>
+				<p>age: {this.state.age}</p>
+				<input id="submitButton" ref="submitButton" type="button" value="提交" onClick={this.changeUserInfo.bind(this, 99)}/>
+				<BodyChild {...this.props} id={4} handleChildValueChange={this.handleChildValueChange.bind(this)}/>
+			</div>
+		)
+	}
 }
+BodyIndex.propTypes = {
+	userid: React.PropTypes.number.isRequired
+};
+BodyIndex.defaultProps = defaultProps;
 
-
+ReactMixin(BodyIndex.prototype, MixinLog);

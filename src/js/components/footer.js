@@ -1,11 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-export default class ComponentFooter extends React.Component {
-    render() {
-        return (
-            <footer>
-                <h1>这里是页脚,一般放置版权信息的东西</h1>
-            </footer>
-        )
-    }
+
+var footerCss  =  require("../../css/footer.css");
+
+export default class ComponentFooter extends React.Component{
+  render(){
+    console.log(footerCss);
+    return (
+      <footer class={footerCss.miniFooter}>
+        <h1>这里是页脚，一般放置版权的一些信息。</h1>
+      </footer>
+    )
+  }
 }
